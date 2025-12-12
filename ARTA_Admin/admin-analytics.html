@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Analytics - City Government of Valenzuela</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    /* Minimal dark mode support */
+    .dark body { background: #0b1220; }
+    .dark .shadow-2xl, .dark .shadow-md { box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+    .dark .bg-white { background-color: #0f172a; }
+    .dark .bg-gray-50 { background-color: #0b1220; }
+    .dark .border-gray-200 { border-color: #1f2937; }
+    .dark .text-gray-800 { color: #e5e7eb; }
+    .dark .text-gray-700 { color: #e5e7eb; }
+    .dark .text-gray-600 { color: #cbd5e1; }
+    .dark .text-gray-500 { color: #94a3b8; }
+    .dark button:hover { background-color: #1f2937; }
+    .dark svg { stroke: #e5e7eb; }
+  </style>
+</head>
+<body class="min-h-screen flex items-center justify-center bg-white font-sans">
+  <div class="w-full max-w-6xl bg-white rounded-xl shadow-2xl overflow-hidden flex flex-col min-h-[600px]">
+    <!-- Header -->
+    <header class="flex justify-between items-center p-6 border-b border-gray-200 bg-white">
+      <div class="flex items-center gap-4">
+        <div class="flex items-center justify-center">
+          <img src="../webAssets/valenzuela_logo.png" alt="Valenzuela City Logo" class="w-14 h-14 object-contain" />
+        </div>
+        <div>
+          <h1 class="text-lg font-bold text-gray-800 tracking-tight">CITY GOVERNMENT OF VALENZUELA</h1>
+          <p class="text-xs text-gray-500">Tuloy ang Progreso, Valenzuela!</p>
+        </div>
+      </div>
+      <button onclick="window.location.href='api/logout.php'" class="border border-gray-300 text-gray-700 px-4 py-2 rounded-md text-sm font-medium hover:bg-gray-50 transition">Logout</button>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-1 flex justify-center bg-gray-50 p-10 pb-24">
+      <div class="w-full max-w-5xl bg-white rounded-xl shadow-md border border-gray-200 p-8 text-center">
+        <h2 class="text-3xl font-bold text-gray-800 mb-10">Analytics Overview</h2>
+        <p id="chartStatus" class="text-sm text-gray-500 mb-8">Loading latest data...</p>
+
+        <!-- Chart Vertical Layout -->
+        <div class="flex flex-col gap-10 items-center">
+          <!-- Bar Chart -->
+          <div class="bg-gray-50 rounded-lg p-6 shadow-inner w-full max-w-3xl">
+            <canvas id="barChart" style="min-height:340px;height:340px;"></canvas>
+          </div>
+
+          <!-- Line Chart -->
+          <div class="bg-gray-50 rounded-lg p-6 shadow-inner w-full max-w-3xl">
+            <canvas id="lineChart" style="min-height:340px;height:340px;"></canvas>
+          </div>
+
+          <!-- Pie Chart -->
+          <div class="bg-gray-50 rounded-lg p-6 shadow-inner w-full max-w-3xl">
+            <canvas id="pieChart" style="min-height:340px;height:340px;"></canvas>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Capsule Navigation -->
+  <nav class="fixed bottom-6 left-1/2 transform -translate-x-1/2 bg-white shadow-lg border border-gray-200 rounded-full flex justify-between items-center w-[400px] sm:w-[440px] md:w-[500px] lg:w-[560px] p-2">
+    
+    <!-- Dashboard -->
+    <button onclick="window.location.href='admin-dashboard.html'" class="flex items-center justify-center gap-2 text-gray-600 hover:bg-blue-50 hover:text-blue-600 flex-1 py-2 rounded-full transition font-medium">
+      <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M11 3a9 9 0 019 9h-9V3z" />
+        <path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 11-9-9v9h9z" />
+      </svg>
+      <span class="text-sm">Dashboard</span>
+    </button>
+
+    <!-- Survey & Data -->
+    <button onclick="window.location.href='admin-survey&data.html'" class="flex items-center justify-center gap-2 text-gray-600 hover:bg-blue-50 hover:text-blue-600 flex-1 py-2 rounded-full transition font-medium">
+      <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M8 10h.01M12 10h.01M16 10h.01M9 16h6m2 2a2 2 0 002-2V8a2 2 0 00-2-2H7a2 2 0 00-2 2v8a2 2 0 002 2h10z" />
+      </svg>
+      <span class="text-sm">Survey & Data</span>
+    </button>
+
+    <!-- Analytics (Active) -->
+    <button class="flex items-center justify-center gap-2 bg-blue-600 text-white flex-1 py-2 rounded-full transition font-medium">
+      <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M3 3v18h18M9 17V9m4 8v-5m4 5V5" />
+      </svg>
+      <span class="text-sm">Analytics</span>
+    </button>
+
+    <!-- Preferences -->
+    <button onclick="window.location.href='admin-preference.html'" class="flex items-center justify-center gap-2 text-gray-600 hover:bg-blue-50 hover:text-blue-600 flex-1 py-2 rounded-full transition font-medium">
+      <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M12 15.5A3.5 3.5 0 1012 8.5a3.5 3.5 0 000 7zm0 4.5v2m0-22v2m10 10h2M2 12H0m3.22 8.78l1.42-1.42M19.36 4.64l1.42-1.42M4.64 4.64L3.22 3.22m16.14 16.14l1.42 1.42" />
+      </svg>
+      <span class="text-sm">Preferences</span>
+    </button>
+  </nav>
+
+  <script>
+    const statusEl = document.getElementById('chartStatus');
+    const charts = {};
+
+    const fallbackData = {
+      monthly: { labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'], data: [12, 18, 22, 25, 19, 30] },
+      weekly: { labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'], data: [5, 7, 6, 9, 4, 3, 8] },
+      satisfaction: { labels: ['Strongly Agree', 'Agree', 'Neither', 'Disagree', 'Strongly Disagree'], data: [25, 15, 5, 3, 2] },
+      totals: { responses: 0 }
+    };
+
+      const palette = ['#1d4ed8', '#22c55e', '#f59e0b', '#ef4444', '#8b5cf6', '#0ea5e9', '#14b8a6'];
+
+    const makeChart = (id, config) => {
+      if (charts[id]) charts[id].destroy();
+      charts[id] = new Chart(document.getElementById(id), config);
+    };
+
+    const renderCharts = (payload) => {
+      const data = payload || fallbackData;
+
+      const hasSatisfaction = Array.isArray(data.satisfaction?.data) && data.satisfaction.data.some(v => Number(v) > 0);
+      const satisfactionData = hasSatisfaction ? data.satisfaction : fallbackData.satisfaction;
+
+      makeChart('barChart', {
+        type: 'bar',
+        data: {
+          labels: data.monthly.labels,
+          datasets: [{
+            label: 'Monthly Submissions',
+            data: data.monthly.data,
+              backgroundColor: data.monthly.data.map((_, i) => palette[i % palette.length])
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: { display: false },
+            title: { display: true, text: 'Monthly Submissions (last 6 months)' }
+          },
+          scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } }
+        }
+      });
+
+      makeChart('lineChart', {
+        type: 'line',
+        data: {
+          labels: data.weekly.labels,
+          datasets: [{
+            label: 'Daily Activity (7 days)',
+            data: data.weekly.data,
+            borderColor: '#2563eb',
+            backgroundColor: 'rgba(37, 99, 235, 0.15)',
+            tension: 0.35,
+            fill: true,
+            pointRadius: 4,
+            pointBackgroundColor: '#1d4ed8'
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: { display: false },
+            title: { display: true, text: 'Daily Activity (last 7 days)' }
+          }
+        }
+      });
+
+      makeChart('pieChart', {
+        type: 'pie',
+        data: {
+          labels: data.satisfaction.labels,
+          datasets: [{
+            data: satisfactionData.data,
+            backgroundColor: ['#1d4ed8', '#3b82f6', '#93c5fd', '#cbd5e1', '#e2e8f0']
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: { position: 'bottom' },
+            title: { display: true, text: 'Satisfaction Breakdown (SQD responses)' }
+          }
+        }
+      });
+
+      if (statusEl) {
+        statusEl.textContent = `Showing ${data.totals.responses ?? 0} recorded responses.`;
+      }
+    };
+
+    const loadAnalytics = async () => {
+      try {
+        const res = await fetch('api/analytics-data.php', { cache: 'no-store' });
+        if (!res.ok) throw new Error('Request failed');
+        const payload = await res.json();
+        if (!payload.success) throw new Error(payload.error || 'Unable to load data');
+        renderCharts(payload.data);
+      } catch (err) {
+        console.error(err);
+        if (statusEl) statusEl.textContent = `Unable to load live data. Showing sample values. (${err.message})`;
+        renderCharts();
+      }
+    };
+
+    const enforceAuth = async () => {
+      try {
+        const res = await fetch('api/session-check.php', { cache: 'no-store' });
+        const data = await res.json();
+        if (!data.logged) {
+          window.location.href = 'admin-login.html';
+        }
+      } catch (e) {
+        window.location.href = 'admin-login.html';
+      }
+    };
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const root = document.documentElement;
+      const theme = localStorage.getItem('theme');
+      if (theme === 'dark') root.classList.add('dark'); else root.classList.remove('dark');
+      if (typeof Chart !== 'undefined' && Chart.defaults) {
+        Chart.defaults.color = theme === 'dark' ? '#e5e7eb' : '#374151';
+        Chart.defaults.borderColor = theme === 'dark' ? '#334155' : '#e5e7eb';
+      }
+
+      enforceAuth();
+      loadAnalytics();
+    });
+  </script>
+</body>
+</html>

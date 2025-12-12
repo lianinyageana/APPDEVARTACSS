@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Dashboard - City Government of Valenzuela</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <style>
+    /* Page load animation */
+    body {
+      opacity: 0;
+      transform: translateY(15px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+    body.loaded {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Chart cards animation */
+    .chart-card {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+    .chart-card.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Floating navigation (fixed bottom) */
+    .floating-nav {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #ffffffcc;
+      backdrop-filter: blur(12px);
+      border: 1px solid #e5e7eb;
+      border-radius: 9999px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+      padding: 8px;
+      z-index: 9999; /* ensures it stays above all other content */
+      width: clamp(320px, 80%, 600px);
+      transition: box-shadow 0.3s ease, transform 0.3s ease, background 0.3s ease;
+    }
+
+    .floating-nav.scrolled {
+      box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+      transform: translateX(-50%) translateY(-2px);
+    }
+
+    /* Add space so content doesn’t overlap the navbar */
+    main {
+      padding-bottom: 120px;
+    }
+
+    /* Minimal dark mode support */
+    .dark body { background: #0b1220; }
+    .dark .floating-nav { background: #0b1220cc; border-color: #1f2937; }
+    .dark .chart-card { background: #0f172a; border-color: #1f2937; }
+    .dark .bg-white { background-color: #0f172a; }
+    .dark .bg-gray-50 { background-color: #0b1220; }
+    .dark .border-gray-200 { border-color: #1f2937; }
+    .dark .text-gray-800 { color: #e5e7eb; }
+    .dark .text-gray-700 { color: #e5e7eb; }
+    .dark .text-gray-600 { color: #cbd5e1; }
+    .dark .text-gray-500 { color: #94a3b8; }
+    .dark button:hover { background-color: #1f2937; }
+    .dark svg { stroke: #e5e7eb; }
+  </style>
+</head>
+
+<body class="min-h-screen bg-white font-sans flex flex-col items-center justify-start">
+  <!-- Main Module -->
+  <div class="w-full max-w-6xl bg-white rounded-xl shadow-2xl overflow-hidden flex flex-col min-h-[600px] mt-10">
+    
+    <!-- Header -->
+    <header class="flex justify-between items-center p-6 border-b border-gray-200 bg-white sticky top-0 z-50">
+      <div class="flex items-center gap-4">
+        <img src="../webAssets/valenzuela_logo.png" alt="Valenzuela City Logo" class="w-14 h-14 object-contain" />
+        <div>
+          <h1 class="text-lg font-bold text-gray-800 tracking-tight">CITY GOVERNMENT OF VALENZUELA</h1>
+          <p class="text-xs text-gray-500">Tuloy ang Progreso, Valenzuela!</p>
+        </div>
+      </div>
+      <button onclick="window.location.href='api/logout.php'" class="border border-gray-300 text-gray-700 px-4 py-2 rounded-md text-sm font-medium hover:bg-gray-50 transition">
+        Logout
+      </button>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-1 bg-gray-50 p-10">
+      <h2 id="welcomeTitle" class="text-4xl font-bold text-gray-800 mb-3">Welcome!</h2>
+      <p id="dashboardStatus" class="text-sm text-gray-500 mb-10">Loading live metrics...</p>
+
+      <div class="flex flex-wrap justify-between gap-6">
+        <!-- Total Surveys -->
+        <div class="chart-card flex-1 min-w-[280px] bg-white rounded-xl shadow-md border border-gray-200 p-6">
+          <h3 class="text-lg font-semibold text-gray-800 mb-4">Responses by Client Type</h3>
+          <canvas id="totalChart"></canvas>
+        </div>
+
+        <!-- Completed -->
+        <div class="chart-card flex-1 min-w-[280px] bg-white rounded-xl shadow-md border border-gray-200 p-6">
+          <h3 class="text-lg font-semibold text-gray-800 mb-4">Sex Breakdown</h3>
+          <canvas id="completedChart"></canvas>
+        </div>
+
+        <!-- Pending -->
+        <div class="chart-card flex-1 min-w-[280px] bg-white rounded-xl shadow-md border border-gray-200 p-6">
+          <h3 class="text-lg font-semibold text-gray-800 mb-4">Feedback Share</h3>
+          <canvas id="pendingChart"></canvas>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Floating Capsule Navigation -->
+  <nav id="floatingNav" class="floating-nav flex justify-between items-center">
+    <!-- Dashboard (Active) -->
+    <button class="flex items-center justify-center gap-2 bg-blue-600 text-white flex-1 py-2 rounded-full transition font-medium shadow-md">
+      <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M11 3a9 9 0 019 9h-9V3z" />
+        <path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 11-9-9v9h9z" />
+      </svg>
+      <span class="text-sm">Dashboard</span>
+    </button>
+
+    <!-- Survey & Data -->
+    <button onclick="window.location.href='admin-survey&data.html'" class="flex items-center justify-center gap-2 text-gray-600 hover:bg-blue-50 hover:text-blue-600 flex-1 py-2 rounded-full transition font-medium">
+      <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M8 10h.01M12 10h.01M16 10h.01M9 16h6m2 2a2 2 0 002-2V8a2 2 0 00-2-2H7a2 2 0 00-2 2v8a2 2 0 002 2h10z" />
+      </svg>
+      <span class="text-sm">Survey & Data</span>
+    </button>
+
+    <!-- Analytics -->
+    <button onclick="window.location.href='admin-analytics.html'" class="flex items-center justify-center gap-2 text-gray-600 hover:bg-blue-50 hover:text-blue-600 flex-1 py-2 rounded-full transition font-medium">
+      <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M3 3v18h18M9 17V9m4 8v-5m4 5V5" />
+      </svg>
+      <span class="text-sm">Analytics</span>
+    </button>
+
+    <!-- Preferences -->
+    <button onclick="window.location.href='admin-preference.html'" class="flex items-center justify-center gap-2 text-gray-600 hover:bg-blue-50 hover:text-blue-600 flex-1 py-2 rounded-full transition font-medium">
+      <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M12 15.5A3.5 3.5 0 1012 8.5a3.5 3.5 0 000 7zm0 4.5v2m0-22v2m10 10h2M2 12H0m3.22 8.78l1.42-1.42M19.36 4.64l1.42-1.42M4.64 4.64L3.22 3.22m16.14 16.14l1.42 1.42" />
+      </svg>
+      <span class="text-sm">Preferences</span>
+    </button>
+  </nav>
+
+  <!-- JS -->
+  <script>
+    const statusEl = document.getElementById('dashboardStatus');
+    const charts = {};
+
+    window.addEventListener('load', () => {
+      document.body.classList.add('loaded');
+      const cards = document.querySelectorAll('.chart-card');
+      cards.forEach((card, index) => {
+        setTimeout(() => card.classList.add('visible'), 200 * index);
+      });
+    });
+
+    const nav = document.getElementById('floatingNav');
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 50) {
+        nav.classList.add('scrolled');
+      } else {
+        nav.classList.remove('scrolled');
+      }
+    });
+
+    const palette = ['#1d4ed8', '#22c55e', '#f59e0b', '#ef4444', '#8b5cf6', '#0ea5e9', '#14b8a6', '#f97316'];
+
+    const makePie = (id, labels, data, titleText) => {
+      if (charts[id]) charts[id].destroy();
+      charts[id] = new Chart(document.getElementById(id), {
+        type: 'doughnut',
+        data: {
+          labels,
+          datasets: [{
+            data,
+            backgroundColor: labels.map((_, i) => palette[i % palette.length]),
+            borderWidth: 0
+          }]
+        },
+        options: {
+          cutout: '55%',
+          plugins: {
+            legend: { position: 'bottom' },
+            title: { display: Boolean(titleText), text: titleText }
+          }
+        }
+      });
+    };
+
+    const fallback = {
+      totals: { responses: 0 },
+      clientType: { labels: ['Business', 'Resident', 'Visitor'], data: [10, 7, 3] },
+      sexBreakdown: { labels: ['Male', 'Female'], data: [12, 8] },
+      feedbackShare: { labels: ['With feedback', 'No feedback'], data: [9, 11] }
+    };
+
+    const renderCharts = (data) => {
+      const payload = data || fallback;
+      makePie('totalChart', payload.clientType.labels, payload.clientType.data, 'Responses by Client Type');
+      makePie('completedChart', payload.sexBreakdown.labels, payload.sexBreakdown.data, 'Sex Breakdown');
+      makePie('pendingChart', payload.feedbackShare.labels, payload.feedbackShare.data, 'Feedback Share');
+
+      if (statusEl) statusEl.textContent = `Showing ${payload.totals.responses ?? 0} recorded responses.`;
+    };
+
+    const loadDashboard = async () => {
+      try {
+        const res = await fetch('api/analytics-data.php');
+        if (!res.ok) throw new Error('Request failed');
+        const payload = await res.json();
+        if (!payload.success) throw new Error(payload.error || 'Unable to load data');
+        renderCharts(payload.data);
+      } catch (err) {
+        console.error(err);
+        if (statusEl) statusEl.textContent = 'Unable to load live data. Showing sample values.';
+        renderCharts();
+      }
+    };
+
+    const enforceAuth = async () => {
+      try {
+        const res = await fetch('api/session-check.php', { cache: 'no-store' });
+        const data = await res.json();
+        if (!data.logged) {
+          window.location.href = 'admin-login.html';
+        }
+        const title = document.getElementById('welcomeTitle');
+        if (title && data.user) {
+          const first = String(data.user).trim().split(' ')[0] || data.user;
+          title.textContent = `Welcome ${first}!`;
+        }
+      } catch (e) {
+        window.location.href = 'admin-login.html';
+      }
+    };
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const root = document.documentElement;
+      const theme = localStorage.getItem('theme');
+      if (theme === 'dark') {
+        root.classList.add('dark');
+      } else {
+        root.classList.remove('dark');
+      }
+      enforceAuth();
+      loadDashboard();
+    });
+  </script>
+</body>
+</html>

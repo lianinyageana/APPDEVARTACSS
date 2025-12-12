@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Preferences - City Government of Valenzuela</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* Minimal dark mode support */
+    .dark body { background: #0b1220; }
+    .dark .bg-white { background-color: #0f172a; }
+    .dark .bg-gray-50 { background-color: #0b1220; }
+    .dark .border-gray-200 { border-color: #1f2937; }
+    .dark .border-gray-300 { border-color: #334155; }
+    .dark .text-gray-800 { color: #e5e7eb; }
+    .dark .text-gray-700 { color: #e5e7eb; }
+    .dark .text-gray-600 { color: #cbd5e1; }
+    .dark .text-gray-500 { color: #94a3b8; }
+    .dark button:hover { background-color: #1f2937; }
+    .dark svg { stroke: #e5e7eb; }
+    .dark input, .dark textarea { background-color: #0b1220; color: #e5e7eb; }
+  </style>
+</head>
+<body class="min-h-screen flex items-center justify-center bg-white font-sans">
+  <div class="w-full max-w-6xl bg-white rounded-xl shadow-2xl overflow-hidden flex flex-col min-h-[600px]">
+    <!-- Header -->
+    <header class="flex justify-between items-center p-6 border-b border-gray-200 bg-white">
+      <div class="flex items-center gap-4">
+        <div class="flex items-center justify-center">
+          <img src="../webAssets/valenzuela_logo.png" alt="Valenzuela City Logo" class="w-14 h-14 object-contain" />
+        </div>
+        <div>
+          <h1 class="text-lg font-bold text-gray-800 tracking-tight">CITY GOVERNMENT OF VALENZUELA</h1>
+          <p class="text-xs text-gray-500">Tuloy ang Progreso, Valenzuela!</p>
+        </div>
+      </div>
+      <button onclick="window.location.href='api/logout.php'" class="border border-gray-300 text-gray-700 px-4 py-2 rounded-md text-sm font-medium hover:bg-gray-50 transition">Logout</button>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-1 flex justify-center bg-gray-50 p-10 pb-24">
+      <div class="w-full max-w-5xl bg-white rounded-xl shadow-md border border-gray-200 flex overflow-hidden">
+        <!-- Vertical Navigation -->
+        <aside class="w-1/4 border-r border-gray-200 bg-gray-50 p-6 space-y-3" id="prefsNav">
+          <button data-tab="personal" class="w-full text-left px-4 py-2 rounded-lg bg-blue-600 text-white font-medium">Personal Information</button>
+          <button data-tab="system" class="w-full text-left px-4 py-2 rounded-lg hover:bg-gray-100 text-gray-700">System</button>
+          <button data-tab="connection" class="w-full text-left px-4 py-2 rounded-lg hover:bg-gray-100 text-gray-700">Connection</button>
+          <button data-tab="database" class="w-full text-left px-4 py-2 rounded-lg hover:bg-gray-100 text-gray-700">Database</button>
+          <button data-tab="information" class="w-full text-left px-4 py-2 rounded-lg hover:bg-gray-100 text-gray-700">Information</button>
+        </aside>
+
+        <!-- Content Area -->
+        <section class="flex-1 p-8">
+          <div class="flex items-center justify-between mb-4">
+            <h2 id="tabTitle" class="text-2xl font-bold text-gray-800">Personal Information</h2>
+            <span id="userBadge" class="text-sm text-gray-500">Checking session...</span>
+          </div>
+
+          <!-- Tabs content -->
+          <div id="tabContent">
+            <!-- Personal Information -->
+            <div data-panel="personal">
+              <p class="text-gray-600 mb-4">Manage your profile and basic account details here.</p>
+              <form class="space-y-4 max-w-md">
+                <div>
+                  <label class="block text-gray-700 text-sm font-medium mb-1">Full Name</label>
+                  <input type="text" placeholder="Juan Dela Cruz" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none" />
+                </div>
+                <div>
+                  <label class="block text-gray-700 text-sm font-medium mb-1">Email Address</label>
+                  <input type="email" placeholder="juan@example.com" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none" />
+                </div>
+                <div>
+                  <label class="block text-gray-700 text-sm font-medium mb-1">Password</label>
+                  <input type="password" placeholder="********" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none" />
+                </div>
+                <button type="submit" class="bg-blue-600 text-white px-5 py-2 rounded-md hover:bg-blue-700 transition font-medium">Save Changes</button>
+              </form>
+            </div>
+
+            <!-- System -->
+            <div data-panel="system" class="hidden">
+              <p class="text-gray-600 mb-4">System preferences such as theme and notifications.</p>
+              <div class="space-y-4 max-w-md">
+                <div class="flex items-center justify-between">
+                  <span class="text-gray-700">Dark Mode</span>
+                  <input type="checkbox" class="toggle" />
+                </div>
+                <div class="flex items-center justify-between">
+                  <span class="text-gray-700">Enable Notifications</span>
+                  <input type="checkbox" class="toggle" />
+                </div>
+              </div>
+            </div>
+
+            <!-- Connection -->
+            <div data-panel="connection" class="hidden">
+              <p class="text-gray-600 mb-4">Connection settings placeholder.</p>
+              <div class="space-y-4 max-w-md">
+                <label class="block text-gray-700 text-sm font-medium mb-1">API Base URL</label>
+                <input type="text" placeholder="http://localhost/ARTASurvey/" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none" />
+              </div>
+            </div>
+
+            <!-- Database -->
+            <div data-panel="database" class="hidden">
+              <p class="text-gray-600 mb-4">Database info placeholder (read-only).</p>
+              <ul class="text-gray-700 space-y-2">
+                <li>Host: localhost</li>
+                <li>Database: arta_survey</li>
+                <li>User: root</li>
+              </ul>
+            </div>
+
+            <!-- Information -->
+            <div data-panel="information" class="hidden">
+              <p class="text-gray-600 mb-4">Version and about.</p>
+              <ul class="text-gray-700 space-y-2">
+                <li>App: ARTA Survey Admin</li>
+                <li>Version: 1.0.0</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <!-- Capsule Navigation -->
+  <nav class="fixed bottom-6 left-1/2 transform -translate-x-1/2 bg-white shadow-lg border border-gray-200 rounded-full flex justify-between items-center w-[400px] sm:w-[440px] md:w-[500px] lg:w-[560px] p-2">
+    
+    <!-- Dashboard -->
+    <button onclick="window.location.href='admin-dashboard.html'" class="flex items-center justify-center gap-2 text-gray-600 hover:bg-blue-50 hover:text-blue-600 flex-1 py-2 rounded-full transition font-medium">
+      <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M11 3a9 9 0 019 9h-9V3z" />
+        <path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 11-9-9v9h9z" />
+      </svg>
+      <span class="text-sm">Dashboard</span>
+    </button>
+
+    <!-- Survey & Data -->
+    <button onclick="window.location.href='admin-survey&data.html'" class="flex items-center justify-center gap-2 text-gray-600 hover:bg-blue-50 hover:text-blue-600 flex-1 py-2 rounded-full transition font-medium">
+      <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M8 10h.01M12 10h.01M16 10h.01M9 16h6m2 2a2 2 0 002-2V8a2 2 0 00-2-2H7a2 2 0 00-2 2v8a2 2 0 002 2h10z" />
+      </svg>
+      <span class="text-sm">Survey & Data</span>
+    </button>
+
+    <!-- Analytics -->
+    <button onclick="window.location.href='admin-analytics.html'" class="flex items-center justify-center gap-2 text-gray-600 hover:bg-blue-50 hover:text-blue-600 flex-1 py-2 rounded-full transition font-medium">
+      <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M3 3v18h18M9 17V9m4 8v-5m4 5V5" />
+      </svg>
+      <span class="text-sm">Analytics</span>
+    </button>
+
+    <!-- Preferences (Active) -->
+    <button class="flex items-center justify-center gap-2 bg-blue-600 text-white flex-1 py-2 rounded-full transition font-medium">
+      <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M12 15.5A3.5 3.5 0 1012 8.5a3.5 3.5 0 000 7zm0 4.5v2m0-22v2m10 10h2M2 12H0m3.22 8.78l1.42-1.42M19.36 4.64l1.42-1.42M4.64 4.64L3.22 3.22m16.14 16.14l1.42 1.42" />
+      </svg>
+      <span class="text-sm">Preferences</span>
+    </button>
+  </nav>
+
+  <script>
+    const updateUserBadge = async () => {
+      try {
+        const res = await fetch('api/session-check.php', { cache: 'no-store' });
+        const data = await res.json();
+        const badge = document.getElementById('userBadge');
+        if (!data.logged) {
+          window.location.href = 'admin-login.html';
+          return;
+        }
+        if (badge) {
+          badge.textContent = `Logged in as ${data.user || 'Admin'}`;
+        }
+      } catch (e) {
+        window.location.href = 'admin-login.html';
+      }
+    };
+
+    const tabs = {
+      personal: 'Personal Information',
+      system: 'System',
+      connection: 'Connection',
+      database: 'Database',
+      information: 'Information'
+    };
+
+    const initTabs = () => {
+      const nav = document.getElementById('prefsNav');
+      const title = document.getElementById('tabTitle');
+      const panels = document.querySelectorAll('[data-panel]');
+      nav.addEventListener('click', (e) => {
+        const btn = e.target.closest('[data-tab]');
+        if (!btn) return;
+        const tab = btn.getAttribute('data-tab');
+
+        nav.querySelectorAll('[data-tab]').forEach(b => {
+          b.classList.remove('bg-blue-600','text-white');
+          b.classList.add('text-gray-700');
+        });
+        btn.classList.add('bg-blue-600','text-white');
+
+        panels.forEach(p => {
+          if (p.getAttribute('data-panel') === tab) {
+            p.classList.remove('hidden');
+          } else {
+            p.classList.add('hidden');
+          }
+        });
+
+        title.textContent = tabs[tab] || 'Preferences';
+      });
+    };
+    const applyThemeFromStorage = () => {
+      const theme = localStorage.getItem('theme');
+      const root = document.documentElement;
+      if (theme === 'dark') {
+        root.classList.add('dark');
+        document.body.style.backgroundColor = '#0b1220';
+      } else {
+        root.classList.remove('dark');
+        document.body.style.backgroundColor = '#ffffff';
+      }
+    };
+
+    const wireSystemToggle = () => {
+      const darkToggle = document.querySelector('[data-panel="system"] .toggle');
+      if (!darkToggle) return;
+      const current = localStorage.getItem('theme') === 'dark';
+      darkToggle.checked = current;
+      darkToggle.addEventListener('change', (e) => {
+        const enable = e.target.checked;
+        localStorage.setItem('theme', enable ? 'dark' : 'light');
+        applyThemeFromStorage();
+      });
+    };
+
+    document.addEventListener('DOMContentLoaded', () => {
+      updateUserBadge();
+      initTabs();
+      applyThemeFromStorage();
+      wireSystemToggle();
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,177 @@
+body {
+  font-family: "Poppins", sans-serif;
+  margin: 0;
+  padding: 0;
+  color: #333;
+  background-image: linear-gradient(to right, #ffffff 55%, #f0f0f000), url(../webAssets/image1.jpg);
+  background-size: cover;
+}
+
+header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-left: 10%;
+  background-color: #ffffff;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
+.textHeaderh2{
+  margin: 0px;
+  font-family: "Inter", sans-serif;
+  font-weight:900;
+}
+
+.textHeader{
+  margin: 0px;
+}
+
+.logo {
+  width: 60px;
+}
+
+.back-link {
+  display: flex;
+  color: #777;
+  text-decoration: none;
+  font-size: 15px;
+  margin-left: 3%;
+  align-items: center;
+  gap: 10px;
+  margin-top: 30px;
+  margin-bottom: 30px;
+}
+
+.backIcon{
+  height: 20px;
+  
+}
+
+.form-container {
+  margin: 40px 80px;
+  max-width: 600px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+  padding: 50px;
+  border-radius: 2%;
+}
+
+.back-link {
+  display: inline-block;
+  color: #666;
+  text-decoration: none;
+  margin-bottom: 20px;
+}
+
+.back-link:hover {
+  text-decoration: underline;
+}
+
+h1 {
+  font-size: 26px;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.subtext {
+  font-size: 15px;
+  color: #555;
+  margin-bottom: 25px;
+}
+
+.survey-box {
+  background: #fff;
+  border-radius: 15px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  padding: 25px;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label{
+  margin-right: 30px;
+}
+
+.form-field {
+  margin-bottom: 20px;
+}
+
+.form-row {
+  display: flex;
+  gap: 50px;
+}
+
+.form-row .form-field {
+  flex: 1;
+}
+
+input[type="text"], input[type="date"], input[type="number"], select {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+input[type="radio"] {
+  margin-right: 5px;
+}
+
+.progress {
+  margin-top: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.progress span {
+  font-size: 14px;
+  color: #333;
+}
+
+.bar {
+  flex: 1;
+  background: #ddd;
+  height: 6px;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.fill {
+  background: #007bff;
+  height: 100%;
+  width: 25%;
+  border-radius: 10px;
+}
+
+.footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: right;
+}
+
+.footer-logo {
+  width: 300px;
+  float: right;
+  margin-top: 30px;
+}
+
+footer{
+  justify-content: left;
+}
+
+button {
+  background: #007bff;
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+button:hover {
+  background: #0056b3;
+}
